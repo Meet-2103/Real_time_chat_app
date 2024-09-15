@@ -8,7 +8,6 @@ import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
 
-
 export default function Chat() {
   const navigate = useNavigate();
   const socket = useRef();
@@ -18,9 +17,10 @@ export default function Chat() {
   const [isLoading,setIsLoaded]=useState(false);
 
   useEffect(() => {
+    
     const temp=async()=>{
       if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
-        // console.log("navigated to login");
+        console.log("navigated to login");
         navigate("/login");
       } else {
         setCurrentUser(
@@ -35,6 +35,7 @@ export default function Chat() {
     temp();
   }, []);
   useEffect(() => {
+    console.log("socket not working");
     if (currentUser) {
       socket.current = io(host);
       socket.current.emit("add-user", currentUser._id);
@@ -43,7 +44,7 @@ export default function Chat() {
 
   useEffect(() => {
     const tem=async()=>{
-      // console.log("in second use effect");
+      console.log("in second use effect");
       if (currentUser) {
         if (currentUser.isAvatarImageSet) {
           try{

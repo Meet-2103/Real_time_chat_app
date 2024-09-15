@@ -10,6 +10,7 @@ export default function Contacts({ contacts, changeChat}) {
 
     const temp=(async()=>{
       // console.log(contacts);
+      console.log("got you");
       const data = await JSON.parse(
         localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
       );

@@ -46,7 +46,8 @@ function Register() {
     theme:"dark",
   }
 
-  useEffect(() => {                                                 //IF WE ARE ALREADY LOGGED IN THEN WE ARE REDIRECTED TO CHAT PAGE
+  useEffect(() => {   
+    console.log("register");                                              //IF WE ARE ALREADY LOGGED IN THEN WE ARE REDIRECTED TO CHAT PAGE
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
     }

@@ -6,8 +6,27 @@ const messageRoutes= require("./routes/messages");                //this path is
 const app = express();                                            
 const socket = require("socket.io");                              //SOCKET IS A LIBRARY WHICH IS BASICALLY A CLIENT SERVER CONNECTION BUT A TWO WAY CONNECTION WHICH REDUCES REDUNDANCY AND HELPS IN REDUCING LATENCY
 require("dotenv").config();                                       //.env files are typically used to store sensitive information that you don't want to commit to your code repository.
+const redis=require('redis');
+const fetch=require('node-fetch');
+const port=process.env.PORT;
+const redis_port=process.env.REDIS_PORT;
 
-app.use(cors());
+const client=redis.createClient(redis_port);
+
+
+
+const allowedOrigins = ["http://localhost:3000","http://localhost:3001","http://localhost:5000"];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 
 mongoose                                                          //connecting nodejs with mongodb
@@ -30,7 +49,8 @@ const server = app.listen(process.env.PORT, () =>                //server listen
 );
 const io = socket(server, {                                      //establishes connection with socket.io server
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000","http://localhost:3001"],
+    methods: ["GET", "POST"],
     credentials: true,
   },
 });
@@ -38,11 +58,13 @@ const io = socket(server, {                                      //establishes c
 global.onlineUsers = new Map();                                  //creates a global online map object for storing all online users                 
 io.on("connection", (socket) => {                                //whenever connection is established we take user object in socket
   global.chatSocket = socket;                                    //assign current user object to global user to broadcast message to all
+  console.log("NEW CLIENT ADDED");
   socket.on("add-user", (userId) => {                            //Listens for an event named "add-user" emitted by the client. When a client joins the chat, it sends their user ID along with this event. The server stores the user ID and the corresponding socket ID (which uniquely identifies the client's connection) in the onlineUsers map.
     onlineUsers.set(userId, socket.id);                          
   });
 
   socket.on("send-msg", (data) => {                              // Listens for a "send-msg" event emitted by the client. This event likely contains message data, including the recipient's user ID (data.to) and the message content (data.msg).
+    console.log("sending message");
     const sendUserSocket = onlineUsers.get(data.to);             //Retrieves the socket ID of the recipient user from the onlineUsers map using the provided user ID (data.to).
     if (sendUserSocket) {                                        //Checks if the recipient user is online (i.e., their socket ID exists in the map).
       socket.to(sendUserSocket).emit("msg-recieve", data.msg);   //If the recipient is online, the server emits a "msg-recieve" event to the recipient's socket, sending the received message (data.msg).

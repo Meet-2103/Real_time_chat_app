@@ -23,7 +23,8 @@ export default function SetAvatar() {                                 //DEFINITI
     theme:"dark",
   };
 
-  useEffect( () => {                                                   //HERE WE ARE CHECKING FOR A USER LOCAL KEY IF IT EXISTS
+  useEffect( () => {   
+    console.log("avatar");                                                //HERE WE ARE CHECKING FOR A USER LOCAL KEY IF IT EXISTS
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))    //THEN WE ARE LOGGED IN SO NO NEED TO NAVIGATE OTHERWISE 
       navigate("/login");                                              //IF NOT FOUND WE NAVIGATE TO THE LOGIN 
   }, []);

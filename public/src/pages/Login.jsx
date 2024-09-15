@@ -19,6 +19,7 @@ export default function Login() {
   };
   
   useEffect(() => {
+    console.log("Login");
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
     }
