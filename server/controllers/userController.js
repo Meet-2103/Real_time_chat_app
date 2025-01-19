@@ -89,4 +89,4 @@ module.exports.logOut = (req, res, next) => {                                //l
     } catch (ex) {
       next(ex);
     }
-  };
+};

@@ -13,8 +13,6 @@ const redis_port=process.env.REDIS_PORT;
 
 const client=redis.createClient(redis_port);
 
-
-
 const allowedOrigins = ["http://localhost:3000","http://localhost:3001","http://localhost:5000"];
 app.use(cors({
   origin: function (origin, callback) {
